@@ -1,3 +1,3 @@
-# app_1
+# hackpue_front
 
 A new Flutter project.
