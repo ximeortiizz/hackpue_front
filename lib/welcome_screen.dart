@@ -13,9 +13,10 @@ class WelcomeScreen extends StatelessWidget {
       end: Alignment.bottomRight,
       colors: [
         
-        Color.fromARGB(255,234,0,222),
-        Color.fromARGB(255, 235, 0, 82),
-        Color.fromARGB(255, 170, 36, 81),
+        Color.fromARGB(255, 7, 67, 115),
+        Colors.lightBlueAccent,
+        Color.fromARGB(255, 97, 218, 234),
+
         
       ],
     );
@@ -32,7 +33,7 @@ class WelcomeScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Spacer(flex: 2),
-              Image.asset(
+              /*Image.asset(
                 "",
                 width: 180,
               )
@@ -40,7 +41,7 @@ class WelcomeScreen extends StatelessWidget {
                   .fadeIn(
                       delay: const Duration(milliseconds: 500),
                       duration: const Duration(milliseconds: 1500))
-                  .slideY(begin: -0.2, curve: Curves.easeOut),
+                  .slideY(begin: -0.2, curve: Curves.easeOut),*/
               const SizedBox(height: 30),
               const Text(
                 'Nombre App',
