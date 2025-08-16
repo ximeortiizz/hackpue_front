@@ -1,0 +1,23 @@
+name: app_1
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.8.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  flutter_animate: ^4.5.0
+  video_player: ^2.8.1  
+  chewie: ^1.7.4   
+  syncfusion_flutter_gauges: ^25.1.35  
+
+flutter:
+  uses-material-design: true
