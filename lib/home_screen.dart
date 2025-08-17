@@ -5,6 +5,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:app_1/NewsScreen.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:app_1/ActivityScreen.dart'; 
+import 'package:app_1/topic_detail_screen.dart'; // <-- 1. IMPORTA LA NUEVA PANTALLA
+
+
 
 class Feature {
   final String title;
@@ -55,7 +60,7 @@ class _HomePageState extends State<HomePage> {
   final List<Feature> features = [
     Feature(
       title: 'Grooming',
-      subtitle: 'La noticia de hoy',
+      subtitle: 'Protege a los menores del acoso digital',
       bottomText: '',
       icon: Icons.warning_amber_rounded,
       iconColor: const Color.fromRGBO(0, 100, 0, 1),
@@ -95,12 +100,143 @@ class _HomePageState extends State<HomePage> {
     ),
   ];
 
+  final List<Topic> topics = [
+    Topic(
+      title: "Grooming",
+      expertName: "Equipo de Seguridad",
+      expertImagePath: 'lib/assets/robot.png',
+      noticias: [
+        Noticia(
+          title: "Caso Reciente de Acoso en Redes",
+          description: "Un análisis del modus operandi.",
+          contenidoCompleto: "El reciente caso destapado por las autoridades muestra cómo los acosadores utilizan perfiles falsos en plataformas de juegos para ganarse la confianza de los menores, solicitando información personal de forma gradual.",
+        ),
+        Noticia(
+          title: "Cómo Identificar las Señales de Alerta",
+          description: "Guía para padres y educadores.",
+          contenidoCompleto: "Las señales de alerta incluyen cambios de comportamiento en el menor, secretismo con sus dispositivos, recibir regalos de desconocidos o usar un lenguaje que no es propio de su edad. Es crucial mantener una comunicación abierta.",
+        ),
+      ],
+    ),
+    Topic(
+      title: "Phishing",
+      expertName: "Equipo de Seguridad",
+      expertImagePath: 'lib/assets/robot.png',
+      noticias: [
+        Noticia(
+          title: "El Engaño del Paquete Falso",
+          description: "Cuidado con los SMS fraudulentos (Smishing).",
+          contenidoCompleto: "Una nueva ola de ataques de 'smishing' utiliza mensajes de texto que afirman que un paquete no pudo ser entregado. El enlace adjunto dirige a una página falsa para robar datos bancarios.",
+        ),
+        Noticia(
+          title: "Falsas Ofertas de Empleo en WhatsApp",
+          description: "Una nueva táctica para robar datos.",
+          contenidoCompleto: "Los estafadores envían mensajes masivos por WhatsApp ofreciendo trabajos con horarios flexibles y altos ingresos. El objetivo es dirigir a las víctimas a sitios web maliciosos para sustraer su información personal y financiera.",
+        ),
+      ],
+    ),
+    Topic(
+      title: "Control Parental",
+      expertName: "Equipo de Seguridad",
+      expertImagePath: 'lib/assets/robot.png',
+      noticias: [
+        Noticia(
+          title: "Herramientas Nativas de Control",
+          description: "Aprovecha las opciones de iOS y Android.",
+          contenidoCompleto: "Tanto iOS (Tiempo en Pantalla) como Android (Bienestar Digital y Family Link) ofrecen herramientas gratuitas y potentes para gestionar el tiempo de uso, restringir contenido y aprobar descargas de aplicaciones. Aprende a configurarlas.",
+        ),
+        Noticia(
+          title: "Más Allá del Bloqueo: El Diálogo",
+          description: "Por qué conversar es la mejor herramienta.",
+          contenidoCompleto: "Aunque las herramientas de control son útiles, los expertos en seguridad infantil coinciden en que la mejor protección es un diálogo constante. Establecer acuerdos y explicar los porqués es más efectivo a largo plazo que una simple prohibición.",
+        ),
+      ],
+    ),
+    Topic(
+      title: "Privacidad",
+      expertName: "Equipo de Seguridad",
+      expertImagePath: 'lib/assets/robot.png',
+      noticias: [
+        Noticia(
+          title: "El Peligro de las Fotos con Uniforme",
+          description: "Riesgos de compartir información sin querer.",
+          contenidoCompleto: "Publicar fotos de los niños con el uniforme escolar puede revelar información sensible como el nombre del colegio y su ubicación. Se recomienda evitar este tipo de publicaciones en perfiles públicos para proteger su seguridad.",
+        ),
+        Noticia(
+          title: "Revisa los Permisos de las Apps",
+          description: "¿Por qué un juego necesita acceso a tus contactos?",
+          contenidoCompleto: "Muchas aplicaciones solicitan permisos que no son necesarios para su funcionamiento, como acceso a la cámara, micrófono o contactos. Es fundamental revisar y gestionar estos permisos en los ajustes del teléfono para evitar la recopilación de datos innecesaria.",
+        ),
+        Noticia(
+          title: "Contraseñas Seguras para Niños",
+          description: "Crea frases secretas en lugar de palabras.",
+          contenidoCompleto: "Enseña a tus hijos a crear contraseñas largas y fáciles de recordar usando una 'frase secreta' como 'MiPerroMaxCome5Galletas!'. Es más segura y memorable que una palabra corta y compleja.",
+        ),
+      ],
+    ),
+  ];
+
   @override
   void initState() {
     super.initState();
     checkBluetoothSupport();
   }
 
+  Future<void> _makePhoneCall(String phoneNumber) async {
+    final Uri launchUri = Uri(
+      scheme: 'tel',
+      path: phoneNumber,
+    );
+    if (await canLaunchUrl(launchUri)) {
+      await launchUrl(launchUri);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('No se pudo realizar la llamada a $phoneNumber'),
+        ),
+      );
+    }
+  }
+
+  void _showEmergencyCallSheet(BuildContext context) {
+    const String phoneNumber = '+522222222222';
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
+      ),
+      builder: (BuildContext context) {
+        return Container(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Container(width: 40, height: 5, decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(10),),),
+              const SizedBox(height: 20),
+              const Text('Llamada de Emergencia', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,),),
+              const SizedBox(height: 8),
+              const Text('Estás a punto de contactar a la Policía Cibernética.', textAlign: TextAlign.center, style: TextStyle(fontSize: 14, color: Colors.grey),),
+              const SizedBox(height: 24),
+              ElevatedButton.icon(
+                onPressed: () {
+                  _makePhoneCall(phoneNumber);
+                  Navigator.pop(context);
+                },
+                icon: const Icon(Icons.call, color: Colors.white),
+                label: const Text('Llamar ahora', style: TextStyle(color: Colors.white)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30),),
+                ),
+              ),
+              const SizedBox(height: 10),
+            ],
+          ),
+        );
+      },
+    );
+  }
   Future<void> checkBluetoothSupport() async {
     if (await FlutterBluePlus.isSupported == false) {
       print("Bluetooth no está disponible en este dispositivo.");
@@ -401,7 +537,7 @@ class _HomePageState extends State<HomePage> {
         ),
         SizedBox(height: 4),
         Text(
-          "Educa y protege a tus menores",
+          "Educa y protege a los menores",
           style: TextStyle(
             fontFamily: 'Lokeya',
             fontSize: 14,
@@ -471,7 +607,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildFeaturesGrid() {
+   Widget _buildFeaturesGrid() {
     return Padding(
       padding: const EdgeInsets.all(20),
       child: GridView.builder(
@@ -482,15 +618,25 @@ class _HomePageState extends State<HomePage> {
           crossAxisCount: 2,
           crossAxisSpacing: 15,
           mainAxisSpacing: 15,
-          childAspectRatio: 1.3,
+          // CAMBIO CLAVE: Reducimos el valor para dar más altura a las tarjetas
+          childAspectRatio: 1.1, 
         ),
         itemBuilder: (context, index) {
-          return FeatureCard(feature: features[index]);
+          return GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => TopicDetailScreen(topic: topics[index]),
+                ),
+              );
+            },
+            child: FeatureCard(feature: features[index]),
+          );
         },
       ),
     );
   }
-
   Widget _buildBottomNavBar() {
     return Container(
       height: 80,
@@ -512,7 +658,7 @@ class _HomePageState extends State<HomePage> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           _buildNavItem(Icons.home, 'Inicio', 1),
-          _buildNavItem(Icons.notifications_none, 'Informarme', 2),
+          _buildNavItem(Icons.info, 'Guía', 2),
           _buildNavItem(Icons.call, 'Emergencias', 3),
         ],
       ),
@@ -522,15 +668,26 @@ class _HomePageState extends State<HomePage> {
   Widget _buildNavItem(IconData icon, String label, int index) {
     final isSelected = _selectedIndex == index;
     return GestureDetector(
-      onTap: () => setState(() => _selectedIndex = index),
+      onTap: () {
+        if (index == 3) {
+          _showEmergencyCallSheet(context);
+        } if (index==2){
+          Navigator.push(
+             context,
+            MaterialPageRoute(
+              builder: (context) =>  NewsScreen( 
+              ),
+            )
+          );
+        } 
+        else {
+          setState(() => _selectedIndex = index);
+        }
+      },
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            icon,
-            size: 28,
-            color: isSelected ? const Color(0xFF2D3E8B) : Colors.grey,
-          ),
+          Icon(icon, size: 28, color: isSelected ? const Color(0xFF2D3E8B) : Colors.grey,),
           const SizedBox(height: 4),
           Text(
             label,
