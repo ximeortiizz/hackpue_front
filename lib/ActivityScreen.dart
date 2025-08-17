@@ -1,3 +1,4 @@
+import 'package:app_1/audio_selection.dart';
 import 'package:flutter/material.dart';
 
 class ActivityScreen extends StatefulWidget {
@@ -83,27 +84,8 @@ class _ActivityScreenState extends State<ActivityScreen> {
           ),
           const SizedBox(height: 40),
 
-          const Text(
-            "Actividad Sugerida",
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            actividadSugerida,
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.grey[700],
-              height: 1.5,
-            ),
-          ),
-
-          const SizedBox(height: 40),
-
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+           Column( // Cambiado a Column para evitar Overflow en pantallas pequeñas
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               ElevatedButton.icon(
                 onPressed: () {
@@ -114,7 +96,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,
                   foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  padding: const EdgeInsets.symmetric(vertical: 15),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -122,16 +104,20 @@ class _ActivityScreenState extends State<ActivityScreen> {
                 icon: const Icon(Icons.notifications),
                 label: const Text("Activar alerta"),
               ),
+              const SizedBox(height: 15),
               ElevatedButton.icon(
                 onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Enviando mensaje de voz al robot...")),
+                  // --- CAMBIO CLAVE AQUÍ ---
+                  // En lugar de un SnackBar, ahora navega a la nueva pantalla
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const AudioPlayerScreen()),
                   );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,
                   foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  padding: const EdgeInsets.symmetric(vertical: 15),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),

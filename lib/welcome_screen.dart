@@ -31,20 +31,20 @@ class WelcomeScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Spacer(flex: 2),
-              /*Image.asset(
-                "",
-                width: 180,
+              Image.asset(
+                "lib/assets/logo1.png",
+                width: 300,
               )
                   .animate()
                   .fadeIn(
                       delay: const Duration(milliseconds: 500),
                       duration: const Duration(milliseconds: 1500))
-                  .slideY(begin: -0.2, curve: Curves.easeOut),*/
-              const SizedBox(height: 30),
+                  .slideY(begin: -0.2, curve: Curves.easeOut),
+              const SizedBox(height: 10),
               const Text(
-                'My App',
+                'CyberGuardian',
                 style: TextStyle(
-                  fontSize: 28,
+                  fontSize: 26,
                   fontWeight: FontWeight.bold,
                   letterSpacing: 1,
                   color: Colors.white,
@@ -60,12 +60,12 @@ class WelcomeScreen extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 40),
                 child: Text(
-                  'SLOGAN',
+                  'La mejor contraseña es la educación.',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 12,
+                    fontSize: 16,
                     color: Colors.white.withOpacity(0.8),
-                    fontFamily: 'Lokeya',
+                    fontFamily: '',
                     fontStyle: FontStyle.italic,
                   ),
                 ),

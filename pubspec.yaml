@@ -7,6 +7,7 @@ environment:
   sdk: ^3.8.1
 
 dependencies:
+  audioplayers: ^6.5.0
   flutter:
     sdk: flutter
   flutter_blue_plus: ^1.35.5
@@ -21,11 +22,21 @@ dev_dependencies:
   chewie: ^1.7.4   
   syncfusion_flutter_gauges: ^25.1.35  
   url_launcher: ^6.3.2
+  audioplayers: ^6.5.0
+
 
 flutter:
   uses-material-design: true
   assets:
     - lib/assets/robot.png
+    - lib/assets/logo1.png
+    - lib/assets/gemini_data.json
+    - lib/assets/audio/audio1.wav
+    - lib/assets/audio/audio2.wav
+    - lib/assets/audio/audio3.wav
+    - lib/assets/audio/audio4.wav
+    - lib/assets/audio/audio5.wav
+
   fonts:
     - family: AGRESSIVE
       fonts:

@@ -2,6 +2,8 @@ import 'package:app_1/ActivityScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:ui';
+import 'dart:convert';
+import 'package:flutter/services.dart' show rootBundle;
 
 class NewsArticle {
   String title;
@@ -19,6 +21,22 @@ class NewsArticle {
     required this.explicacion,
     required this.actividadSugerida,
   });
+
+  factory NewsArticle.fromJson(Map<String, dynamic> json) {
+    return NewsArticle(
+      title: json['title'] ?? '',
+      link: json['url'] ?? '',
+      summary: json['digest_es'] ?? json['summary'] ?? '',
+      date: json['published'] != null ? json['published'].substring(0, 10) : '',
+      explicacion: json['digest_es'] ?? '',
+      actividadSugerida:
+          json['activity_es'] != null && json['activity_es']['titulo'] != null
+          ? json['activity_es']['titulo'] +
+                '\n' +
+                (json['activity_es']['pasos'] as List<dynamic>).join("\n")
+          : '',
+    );
+  }
 }
 
 class NewsScreen extends StatefulWidget {
@@ -29,49 +47,31 @@ class NewsScreen extends StatefulWidget {
 }
 
 class _NewsScreenState extends State<NewsScreen> {
-
-  late final List<NewsArticle> articles;
+  List<NewsArticle> articles = [];
+  late PageController _pageController;
+  double _currentPage = 0.0;
 
   @override
   void initState() {
     super.initState();
-    articles = [
-      NewsArticle(
-        title: 'Vulnerabilidad crítica en OpenSSL afecta a servidores de todo el mundo',
-        summary: 'Una nueva falla de seguridad en la popular librería de criptografía OpenSSL podría permitir a los atacantes ejecutar código de forma remota...',
-        link: 'https://www.incibe.es/protege-tu-empresa/avisos-seguridad',
-        date: '15 de Agosto, 2025',
-        explicacion: "Una vulnerabilidad es como una puerta sin cerradura en un programa. Si un 'malo' la encuentra, puede entrar sin permiso. Por eso es muy importante 'poner la cerradura' actualizando los programas.",
-        actividadSugerida: "Juego de las Actualizaciones: Dibuja un castillo con varias puertas. Explica que cada actualización es un guardián nuevo que protege una puerta. Cada vez que 'actualicen' (pongan un guardián), el castillo estará más seguro.",
-      ),
-      NewsArticle(
-        title: 'Aumento de ataques de Phishing dirigidos a usuarios en la nube',
-        summary: 'Los ciberdelincuentes están utilizando tácticas cada vez más sofisticadas para robar credenciales de acceso a plataformas como Microsoft 350...',
-        link: 'https://www.xataka.com/seguridad/microsoft-365-se-ha-convertido-objetivo-numero-uno-phishing-laboral-este-motivo',
-        date: '14 de Agosto, 2025',
-        explicacion: "El phishing es como un lobo disfrazado de oveja. Son correos o mensajes que parecen de alguien que conoces (como un amigo o un juego), pero en realidad es un 'malo' que quiere robar tus contraseñas.",
-        actividadSugerida: "Juego de Roles: 'El Pescador de Secretos'. Crea tarjetas con mensajes: unos seguros y otros sospechosos (p. ej., '¡Ganaste un premio! Haz clic aquí'). Pídele a tu hijo que 'pesque' solo los mensajes seguros.",
-      ),
-      NewsArticle(
-        title: '¿Es seguro el "smishing"? Cómo protegerte de estafas por SMS',
-        summary: 'El "smishing" o phishing por SMS está en auge. Los estafadores envían mensajes de texto falsos haciéndose pasar por bancos o empresas...',
-        link: 'https://www.osi.es/es/actualidad/blog/2023/04/21/que-es-el-smishing-y-como-puedes-protegerte',
-        date: '13 de Agosto, 2025',
-        explicacion: "El smishing es muy parecido al phishing, pero ocurre en los mensajes de texto del teléfono. A veces envían enlaces peligrosos que no debemos abrir, incluso si parecen importantes.",
-        actividadSugerida: "La Regla de los 3 Pasos: 1. ¿Conozco a quien me envía esto? 2. ¿Me pide que haga algo rápido o me ofrece algo demasiado bueno? 3. Si dudo, pregunto a un adulto antes de tocar nada. Practica con mensajes de ejemplo.",
-      ),
-    ];
-
     _pageController = PageController(viewportFraction: 0.85, initialPage: 0);
     _pageController.addListener(() {
       setState(() {
         _currentPage = _pageController.page!;
       });
     });
+    _loadArticles();
   }
 
-  late PageController _pageController;
-  double _currentPage = 0.0;
+  Future<void> _loadArticles() async {
+    final String response = await rootBundle.loadString(
+      'lib/assets/gemini_data.json',
+    );
+    final List<dynamic> data = json.decode(response);
+    setState(() {
+      articles = data.map((json) => NewsArticle.fromJson(json)).toList();
+    });
+  }
 
   @override
   void dispose() {
@@ -90,9 +90,19 @@ class _NewsScreenState extends State<NewsScreen> {
         ),
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: const Text('Noticias importantes', style: TextStyle(fontSize:20, color: Colors.white, fontWeight: FontWeight.bold),),
+        title: const Text(
+          'Noticias importantes',
+          style: TextStyle(
+            fontSize: 20,
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         actions: [
-          IconButton(icon: const Icon(Icons.apps_rounded, color: Colors.white), onPressed: () {},),
+          IconButton(
+            icon: const Icon(Icons.apps_rounded, color: Colors.white),
+            onPressed: () {},
+          ),
         ],
       ),
       body: Container(
@@ -114,27 +124,32 @@ class _NewsScreenState extends State<NewsScreen> {
             children: [
               const SizedBox(height: 20),
               Expanded(
-                child: PageView.builder(
-                  controller: _pageController,
-                  itemCount: articles.length,
-                  itemBuilder: (context, index) {
-                    double diff = index - _currentPage;
-                    final double scale = (1 - diff.abs() * 0.1).clamp(0.88, 1.0);
-                    final double yOffset = diff.abs() * 30.0;
-                    final double rotation = diff * -0.1;
+                child: articles.isEmpty
+                    ? const Center(child: CircularProgressIndicator())
+                    : PageView.builder(
+                        controller: _pageController,
+                        itemCount: articles.length,
+                        itemBuilder: (context, index) {
+                          double diff = index - _currentPage;
+                          final double scale = (1 - diff.abs() * 0.1).clamp(
+                            0.88,
+                            1.0,
+                          );
+                          final double yOffset = diff.abs() * 30.0;
+                          final double rotation = diff * -0.1;
 
-                    return Transform.translate(
-                      offset: Offset(0, yOffset),
-                      child: Transform.rotate(
-                        angle: rotation,
-                        child: Transform.scale(
-                          scale: scale,
-                          child: NewsCard(article: articles[index]),
-                        ),
+                          return Transform.translate(
+                            offset: Offset(0, yOffset),
+                            child: Transform.rotate(
+                              angle: rotation,
+                              child: Transform.scale(
+                                scale: scale,
+                                child: NewsCard(article: articles[index]),
+                              ),
+                            ),
+                          );
+                        },
                       ),
-                    );
-                  },
-                ),
               ),
               const SizedBox(height: 20),
             ],
@@ -239,8 +254,20 @@ class NewsCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Guía para hablar", style: TextStyle(color: Colors.grey.shade700, fontSize: 12,),),
-                    Text("del tema...", style: TextStyle(color: Colors.grey.shade700, fontSize: 12,),),
+                    Text(
+                      "Guía para hablar",
+                      style: TextStyle(
+                        color: Colors.grey.shade700,
+                        fontSize: 12,
+                      ),
+                    ),
+                    Text(
+                      "del tema...",
+                      style: TextStyle(
+                        color: Colors.grey.shade700,
+                        fontSize: 12,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -261,13 +288,25 @@ class NewsCard extends StatelessWidget {
                   child: BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10,),
-                      decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.1), 
-                        borderRadius: BorderRadius.circular(20.0),
-                        border: Border.all(color: Colors.black.withOpacity(0.2),),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 10,
                       ),
-                      child: Text("Ver Aquí", style: TextStyle(color: Colors.black.withOpacity(0.8), fontWeight: FontWeight.bold, fontSize: 14,),),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(20.0),
+                        border: Border.all(
+                          color: Colors.black.withOpacity(0.2),
+                        ),
+                      ),
+                      child: Text(
+                        "Ver Aquí",
+                        style: TextStyle(
+                          color: Colors.black.withOpacity(0.8),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                      ),
                     ),
                   ),
                 ),
