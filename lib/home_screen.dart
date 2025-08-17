@@ -1,5 +1,6 @@
 import 'dart:async' as async;
 import 'dart:io';
+import 'package:app_1/APINewsScreen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
@@ -10,7 +11,7 @@ class Feature {
   final String subtitle;
   final String bottomText;
   final IconData icon;
-  final Color iconColor; 
+  final Color iconColor;
   final Color iconBgColor;
   final List<Color> gradientColors;
   final String? imagePath;
@@ -20,7 +21,7 @@ class Feature {
     required this.subtitle,
     required this.bottomText,
     required this.icon,
-    required this.iconColor, 
+    required this.iconColor,
     required this.iconBgColor,
     required this.gradientColors,
     this.imagePath,
@@ -57,27 +58,30 @@ class _HomePageState extends State<HomePage> {
       subtitle: 'La noticia de hoy',
       bottomText: '',
       icon: Icons.warning_amber_rounded,
-      iconColor: const Color.fromRGBO(0, 100, 0, 1), 
-      iconBgColor: const Color.fromRGBO(167, 216, 169, 1), 
-      gradientColors: [const Color.fromRGBO(230, 249, 240, 1), const Color(0xFFDBF4E8)], 
+      iconColor: const Color.fromRGBO(0, 100, 0, 1),
+      iconBgColor: const Color.fromRGBO(167, 216, 169, 1),
+      gradientColors: [
+        const Color.fromRGBO(230, 249, 240, 1),
+        const Color(0xFFDBF4E8),
+      ],
     ),
     Feature(
       title: 'Phishing',
       subtitle: 'La noticia de hoy',
       bottomText: '',
       icon: Icons.grid_view_rounded,
-      iconColor: const Color(0xFF00008B), 
-      iconBgColor: const Color(0xFFADC8E6), 
-      gradientColors: [const Color(0xFFEBF2FA), const Color(0xFFE2EAF8)], 
+      iconColor: const Color(0xFF00008B),
+      iconBgColor: const Color(0xFFADC8E6),
+      gradientColors: [const Color(0xFFEBF2FA), const Color(0xFFE2EAF8)],
     ),
     Feature(
       title: 'Control Parental',
       subtitle: 'La noticia de hoy',
       bottomText: '',
       icon: Icons.location_on_outlined,
-      iconColor: const Color(0xFF00008B), 
-      iconBgColor: const Color(0xFFADC8E6), 
-      gradientColors: [const Color(0xFFEBF2FA), const Color(0xFFE2EAF8)], 
+      iconColor: const Color(0xFF00008B),
+      iconBgColor: const Color(0xFFADC8E6),
+      gradientColors: [const Color(0xFFEBF2FA), const Color(0xFFE2EAF8)],
     ),
 
     Feature(
@@ -85,9 +89,9 @@ class _HomePageState extends State<HomePage> {
       subtitle: 'La noticia de hoy',
       bottomText: '',
       icon: Icons.shield_outlined,
-      iconColor: const Color(0xFF006400), 
-      iconBgColor: const Color(0xFFA7D8A9), 
-      gradientColors: [const Color(0xFFE6F9F0), const Color(0xFFDBF4E8)], 
+      iconColor: const Color(0xFF006400),
+      iconBgColor: const Color(0xFFA7D8A9),
+      gradientColors: [const Color(0xFFE6F9F0), const Color(0xFFDBF4E8)],
     ),
   ];
 
@@ -97,7 +101,6 @@ class _HomePageState extends State<HomePage> {
     checkBluetoothSupport();
   }
 
-  
   Future<void> checkBluetoothSupport() async {
     if (await FlutterBluePlus.isSupported == false) {
       print("Bluetooth no está disponible en este dispositivo.");
@@ -115,6 +118,7 @@ class _HomePageState extends State<HomePage> {
       await FlutterBluePlus.turnOn();
     }
   }
+
   void scanForDevices() async {
     setState(() {
       isScanning = true;
@@ -124,9 +128,11 @@ class _HomePageState extends State<HomePage> {
     FlutterBluePlus.scanResults.listen((results) {
       setState(() {
         scanResults = results
-            .where((r) =>
-                r.device.advName.contains("ESP32") ||
-                r.device.advName.contains("EMG"))
+            .where(
+              (r) =>
+                  r.device.advName.contains("ESP32") ||
+                  r.device.advName.contains("EMG"),
+            )
             .toList();
       });
     });
@@ -134,17 +140,16 @@ class _HomePageState extends State<HomePage> {
     FlutterBluePlus.stopScan();
     setState(() => isScanning = false);
   }
+
   int _convertToInt(List<int> value) {
     if (value.length == 1) return value[0];
     if (value.length == 2) return (value[1] << 8) | value[0];
     if (value.length == 4) {
-      return (value[3] << 24) |
-          (value[2] << 16) |
-          (value[1] << 8) |
-          value[0];
+      return (value[3] << 24) | (value[2] << 16) | (value[1] << 8) | value[0];
     }
     return 0;
   }
+
   void connectToDevice(BluetoothDevice device) async {
     setState(() {
       espDevice = device;
@@ -169,32 +174,29 @@ class _HomePageState extends State<HomePage> {
       }
     }
   }
+
   void disconnectDevice() async {
     if (espDevice != null) {
       bool _really_disconect = await showDialog(
         context: context,
         builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text("¿Desconectar?"),
-              content:
-                  Text('¿Estás seguro de que quieres desconectarte?'),
-                  actions: [
-                TextButton(
-                    onPressed: () => Navigator.of(context).pop(false),
-                    child: Text(
-                      'Cancelar',
-                      style: TextStyle(color: Colors.blue),
-                    )),
-                    TextButton(
-                    onPressed: () => Navigator.of(context).pop(true),
-                    child: Text(
-                      'Aceptar',
-                      style: TextStyle(color: Colors.cyan),
-              )),
-              ],
-            );
-          });
-              if (_really_disconect) {
+          return AlertDialog(
+            title: Text("¿Desconectar?"),
+            content: Text('¿Estás seguro de que quieres desconectarte?'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: Text('Cancelar', style: TextStyle(color: Colors.blue)),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: Text('Aceptar', style: TextStyle(color: Colors.cyan)),
+              ),
+            ],
+          );
+        },
+      );
+      if (_really_disconect) {
         await espDevice!.disconnect();
         setState(() {
           espDevice = null;
@@ -203,22 +205,19 @@ class _HomePageState extends State<HomePage> {
       }
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF8F5FA),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            _buildHeader(),
-            _buildFeaturesGrid(),
-          ],
-        ),
+        child: Column(children: [_buildHeader(), _buildFeaturesGrid()]),
       ),
       bottomNavigationBar: _buildBottomNavBar(),
     );
   }
-   Widget _buildHeader() {
+
+  Widget _buildHeader() {
     return Container(
       padding: const EdgeInsets.only(top: 50, bottom: 20, left: 20, right: 20),
       decoration: const BoxDecoration(
@@ -242,8 +241,9 @@ class _HomePageState extends State<HomePage> {
           AnimatedSize(
             duration: const Duration(milliseconds: 300),
             curve: Curves.easeInOut,
-            child:
-                _isPanelOpen ? _buildConnectionPanel() : const SizedBox.shrink(),
+            child: _isPanelOpen
+                ? _buildConnectionPanel()
+                : const SizedBox.shrink(),
           ),
           const SizedBox(height: 25),
           _buildTimeLimit(),
@@ -254,6 +254,7 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
   Widget _buildProfileBar() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -267,33 +268,37 @@ class _HomePageState extends State<HomePage> {
             radius: 20,
             //backgroundColor: Colors.transparent,
             backgroundImage: AssetImage('lib/assets/robot.png'),
-
           ),
           const SizedBox(width: 12),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Robot 1",
-                  style: TextStyle(
-                      fontFamily: 'Lokeya',
-                      fontSize: 16,
-                      color: Colors.grey[800])),
+              Text(
+                "Robot 1",
+                style: TextStyle(
+                  fontFamily: 'Lokeya',
+                  fontSize: 16,
+                  color: Colors.grey[800],
+                ),
+              ),
               Row(
                 children: [
                   Container(
                     width: 8,
                     height: 8,
                     decoration: BoxDecoration(
-                        color: isConnected ? Colors.green : Colors.red,
-                        shape: BoxShape.circle),
+                      color: isConnected ? Colors.green : Colors.red,
+                      shape: BoxShape.circle,
+                    ),
                   ),
                   const SizedBox(width: 5),
                   Text(
                     isConnected ? 'Conectado' : 'Desconectado',
                     style: TextStyle(
-                        fontFamily: 'Lokeya',
-                        fontSize: 12,
-                        color: Colors.grey[600]),
+                      fontFamily: 'Lokeya',
+                      fontSize: 12,
+                      color: Colors.grey[600],
+                    ),
                   ),
                 ],
               ),
@@ -315,6 +320,7 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
   Widget _buildConnectionPanel() {
     return Container(
       margin: const EdgeInsets.only(top: 15),
@@ -326,34 +332,47 @@ class _HomePageState extends State<HomePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text('Dispositivos encontrados',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontFamily: 'Cocogoose',
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white)),
+          Text(
+            'Dispositivos encontrados',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontFamily: 'Cocogoose',
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
           const SizedBox(height: 10),
           if (isScanning)
             const Center(child: CircularProgressIndicator(color: Colors.white)),
           if (!isScanning && scanResults.isEmpty)
-            const Text("No se encontraron dispositivos",
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.white70)),
+            const Text(
+              "No se encontraron dispositivos",
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.white70),
+            ),
           if (scanResults.isNotEmpty)
             ...scanResults.map((r) {
               final device = r.device;
               return ListTile(
-                title: Text(device.advName.isNotEmpty
-                    ? device.advName
-                    : "Dispositivo desconocido"),
-                subtitle: Text(device.remoteId.toString(),
-                    style: const TextStyle(color: Colors.white70)),
+                title: Text(
+                  device.advName.isNotEmpty
+                      ? device.advName
+                      : "Dispositivo desconocido",
+                ),
+                subtitle: Text(
+                  device.remoteId.toString(),
+                  style: const TextStyle(color: Colors.white70),
+                ),
                 trailing: ElevatedButton(
                   onPressed: () => connectToDevice(device),
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.white),
-                  child: const Text("Conectar",
-                      style: TextStyle(color: Color(0xFF2D3E8B))),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                  ),
+                  child: const Text(
+                    "Conectar",
+                    style: TextStyle(color: Color(0xFF2D3E8B)),
+                  ),
                 ),
               );
             }).toList(),
@@ -367,28 +386,38 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
   Widget _buildTimeLimit() {
     return const Column(
       children: [
-        Text('Bienvenido',
-            style: TextStyle(
-                fontFamily: 'AGRESSIVE',
-                fontSize: 30,
-                fontWeight: FontWeight.bold,
-                color: Colors.white)),
+        Text(
+          'Bienvenido',
+          style: TextStyle(
+            fontFamily: 'AGRESSIVE',
+            fontSize: 30,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
         SizedBox(height: 4),
-        Text("Educa y protege a tus menores",
-            style: TextStyle(
-                fontFamily: 'Lokeya', fontSize: 14, color: Colors.white70)),
+        Text(
+          "Educa y protege a tus menores",
+          style: TextStyle(
+            fontFamily: 'Lokeya',
+            fontSize: 14,
+            color: Colors.white70,
+          ),
+        ),
       ],
     );
   }
+
   Widget _buildNewsSection() {
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const NewsScreen()),
+          MaterialPageRoute(builder: (context) => const APINewsScreen()),
         );
       },
       child: Container(
@@ -441,6 +470,7 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
   Widget _buildFeaturesGrid() {
     return Padding(
       padding: const EdgeInsets.all(20),
@@ -460,18 +490,22 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
   Widget _buildBottomNavBar() {
     return Container(
       height: 80,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(25), topRight: Radius.circular(25)),
+          topLeft: Radius.circular(25),
+          topRight: Radius.circular(25),
+        ),
         boxShadow: [
           BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
-              spreadRadius: 1,
-              blurRadius: 10)
+            color: Colors.grey.withOpacity(0.2),
+            spreadRadius: 1,
+            blurRadius: 10,
+          ),
         ],
       ),
       child: Row(
@@ -484,6 +518,7 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
   Widget _buildNavItem(IconData icon, String label, int index) {
     final isSelected = _selectedIndex == index;
     return GestureDetector(
@@ -491,17 +526,21 @@ class _HomePageState extends State<HomePage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon,
-              size: 28,
-              color: isSelected ? const Color(0xFF2D3E8B) : Colors.grey),
+          Icon(
+            icon,
+            size: 28,
+            color: isSelected ? const Color(0xFF2D3E8B) : Colors.grey,
+          ),
           const SizedBox(height: 4),
-          Text(label,
-              style: TextStyle(
-                  fontFamily: 'Cocogoose',
-                  fontSize: 12,
-                  color: isSelected ? const Color(0xFF2D3E8B) : Colors.grey,
-                  fontWeight:
-                      isSelected ? FontWeight.bold : FontWeight.normal)),
+          Text(
+            label,
+            style: TextStyle(
+              fontFamily: 'Cocogoose',
+              fontSize: 12,
+              color: isSelected ? const Color(0xFF2D3E8B) : Colors.grey,
+              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+            ),
+          ),
         ],
       ),
     );
