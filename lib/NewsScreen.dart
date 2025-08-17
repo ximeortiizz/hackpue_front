@@ -4,12 +4,12 @@ import 'package:url_launcher/url_launcher.dart';
 import 'dart:ui';
 
 class NewsArticle {
-  final String title;
-  final String link;
-  final String summary;
-  final String date;
-  final String explicacion;
-  final String actividadSugerida;
+  String title;
+  String link;
+  String summary;
+  String date;
+  String explicacion;
+  String actividadSugerida;
 
   NewsArticle({
     required this.title,

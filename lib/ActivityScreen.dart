@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class ActivityScreen extends StatefulWidget {
-  final String explicacion;
-  final String actividadSugerida;
+  String explicacion;
+  String actividadSugerida;
 
-  const ActivityScreen({
+  ActivityScreen({
     super.key,
     required this.explicacion,
     required this.actividadSugerida,
