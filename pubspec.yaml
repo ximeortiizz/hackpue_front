@@ -20,6 +20,10 @@ dev_dependencies:
   video_player: ^2.8.1  
   chewie: ^1.7.4   
   syncfusion_flutter_gauges: ^25.1.35  
+  url_launcher: ^6.3.2
 
 flutter:
   uses-material-design: true
+  assets:
+    
+    
