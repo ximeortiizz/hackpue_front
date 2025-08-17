@@ -417,7 +417,7 @@ class _HomePageState extends State<HomePage> {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const APINewsScreen()),
+          MaterialPageRoute(builder: (context) => const NewsScreen()),
         );
       },
       child: Container(
