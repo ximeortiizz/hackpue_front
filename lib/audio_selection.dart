@@ -20,9 +20,9 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
   void _playAudio(String assetPath) async {
     try {
       await audioPlayer.play(AssetSource(assetPath));
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Reproduciendo: $assetPath')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Reproduciendo: $assetPath')));
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error al reproducir el audio: $e')),
@@ -48,11 +48,7 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
         flexibleSpace: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
-              colors: [
-                Color(0xFF0D47A1), 
-                Color(0xFF42A5F5), 
-                Color(0xFF66BB6A), 
-              ],
+              colors: [Color(0xFF0D47A1), Color(0xFF42A5F5), Color(0xFF66BB6A)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -74,35 +70,35 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
               ),
               const SizedBox(height: 30),
-              
+
               _buildAudioButton(
                 text: "Frase 1",
                 icon: Icons.task_alt,
-                assetPath: 'audio/audio1.wav', 
+                assetPath: 'audio/audio1.mp4',
               ),
               const SizedBox(height: 15),
               _buildAudioButton(
                 text: "Frase 2",
                 icon: Icons.task_alt,
-                assetPath: 'audio/audio2.wav',        
+                assetPath: 'audio/audio2.wav',
               ),
               const SizedBox(height: 15),
               _buildAudioButton(
                 text: "Frase 3",
                 icon: Icons.task_alt,
-                assetPath: 'audio/audio3.wav',   
+                assetPath: 'audio/audio3.wav',
               ),
               const SizedBox(height: 15),
               _buildAudioButton(
                 text: "Frase 4",
                 icon: Icons.task_alt,
-                assetPath: 'audio/audio3.wav',   
+                assetPath: 'audio/audio3.wav',
               ),
               const SizedBox(height: 15),
               _buildAudioButton(
                 text: "Frase 5",
                 icon: Icons.task_alt,
-                assetPath: 'audio/audio3.wav',   
+                assetPath: 'audio/audio3.wav',
               ),
             ],
           ),
@@ -124,9 +120,7 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
         backgroundColor: Colors.white,
         foregroundColor: Colors.blue.shade800,
         padding: const EdgeInsets.symmetric(vertical: 20),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         elevation: 4,
         shadowColor: Colors.grey.withOpacity(0.3),
       ),

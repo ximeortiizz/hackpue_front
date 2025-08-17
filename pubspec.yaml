@@ -1,6 +1,6 @@
 name: app_1
 description: "A new Flutter project."
-publish_to: 'none'
+publish_to: "none"
 version: 0.1.0
 
 environment:
@@ -18,12 +18,11 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^5.0.0
   flutter_animate: ^4.5.0
-  video_player: ^2.8.1  
-  chewie: ^1.7.4   
-  syncfusion_flutter_gauges: ^25.1.35  
+  video_player: ^2.8.1
+  chewie: ^1.7.4
+  syncfusion_flutter_gauges: ^25.1.35
   url_launcher: ^6.3.2
   audioplayers: ^6.5.0
-
 
 flutter:
   uses-material-design: true
@@ -31,7 +30,7 @@ flutter:
     - lib/assets/robot.png
     - lib/assets/logo1.png
     - lib/assets/gemini_data.json
-    - lib/assets/audio/audio1.wav
+    - lib/assets/audio/audio1.mp4
     - lib/assets/audio/audio2.wav
     - lib/assets/audio/audio3.wav
     - lib/assets/audio/audio4.wav
@@ -44,6 +43,3 @@ flutter:
     - family: Lokeya
       fonts:
         - asset: lib/assets/fonts/Lokeya.ttf
-          
-    
-    
