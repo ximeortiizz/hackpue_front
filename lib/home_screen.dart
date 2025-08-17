@@ -10,6 +10,7 @@ class Feature {
   final String subtitle;
   final String bottomText;
   final IconData icon;
+  final Color iconColor; 
   final Color iconBgColor;
   final List<Color> gradientColors;
   final String? imagePath;
@@ -19,6 +20,7 @@ class Feature {
     required this.subtitle,
     required this.bottomText,
     required this.icon,
+    required this.iconColor, 
     required this.iconBgColor,
     required this.gradientColors,
     this.imagePath,
@@ -55,32 +57,37 @@ class _HomePageState extends State<HomePage> {
       subtitle: 'La noticia de hoy',
       bottomText: '',
       icon: Icons.warning_amber_rounded,
-      iconBgColor: const Color(0xFFF9D4D5),
-      gradientColors: [Color(0xFFFBE9EA), Color(0xFFFADDE1)],
+      iconColor: const Color.fromRGBO(0, 100, 0, 1), 
+      iconBgColor: const Color.fromRGBO(167, 216, 169, 1), 
+      gradientColors: [const Color.fromRGBO(230, 249, 240, 1), const Color(0xFFDBF4E8)], 
     ),
     Feature(
       title: 'Phishing',
       subtitle: 'La noticia de hoy',
       bottomText: '',
       icon: Icons.grid_view_rounded,
-      iconBgColor: const Color(0xFFFBE1C8),
-      gradientColors: [Color(0xFFFEF3E5), Color(0xFFFDECD7)],
+      iconColor: const Color(0xFF00008B), 
+      iconBgColor: const Color(0xFFADC8E6), 
+      gradientColors: [const Color(0xFFEBF2FA), const Color(0xFFE2EAF8)], 
     ),
     Feature(
       title: 'Control Parental',
       subtitle: 'La noticia de hoy',
       bottomText: '',
       icon: Icons.location_on_outlined,
-      iconBgColor: const Color(0xFFD3D3F6),
-      gradientColors: [Color(0xFFEBEBFC), Color(0xFFE3E2F8)],
+      iconColor: const Color(0xFF00008B), 
+      iconBgColor: const Color(0xFFADC8E6), 
+      gradientColors: [const Color(0xFFEBF2FA), const Color(0xFFE2EAF8)], 
     ),
+
     Feature(
       title: 'Privacidad',
       subtitle: 'La noticia de hoy',
       bottomText: '',
       icon: Icons.shield_outlined,
-      iconBgColor: const Color(0xFFCFF0DF),
-      gradientColors: [Color(0xFFE6F9F0), Color(0xFFDBF4E8)],
+      iconColor: const Color(0xFF006400), 
+      iconBgColor: const Color(0xFFA7D8A9), 
+      gradientColors: [const Color(0xFFE6F9F0), const Color(0xFFDBF4E8)], 
     ),
   ];
 
@@ -90,12 +97,12 @@ class _HomePageState extends State<HomePage> {
     checkBluetoothSupport();
   }
 
+  
   Future<void> checkBluetoothSupport() async {
     if (await FlutterBluePlus.isSupported == false) {
       print("Bluetooth no está disponible en este dispositivo.");
       return;
     }
-
     FlutterBluePlus.adapterState.listen((BluetoothAdapterState state) {
       print("Estado de Bluetooth: $state");
       if (state == BluetoothAdapterState.on) {
@@ -104,20 +111,16 @@ class _HomePageState extends State<HomePage> {
         print("Por favor, habilita la función Bluetooth para continuar.");
       }
     });
-
     if (!kIsWeb && Platform.isAndroid) {
       await FlutterBluePlus.turnOn();
     }
   }
-
   void scanForDevices() async {
     setState(() {
       isScanning = true;
       scanResults.clear();
     });
-
     FlutterBluePlus.startScan(timeout: Duration(seconds: 5));
-
     FlutterBluePlus.scanResults.listen((results) {
       setState(() {
         scanResults = results
@@ -127,13 +130,10 @@ class _HomePageState extends State<HomePage> {
             .toList();
       });
     });
-
     await Future.delayed(const Duration(seconds: 5));
     FlutterBluePlus.stopScan();
-
     setState(() => isScanning = false);
   }
-
   int _convertToInt(List<int> value) {
     if (value.length == 1) return value[0];
     if (value.length == 2) return (value[1] << 8) | value[0];
@@ -145,16 +145,13 @@ class _HomePageState extends State<HomePage> {
     }
     return 0;
   }
-
   void connectToDevice(BluetoothDevice device) async {
     setState(() {
       espDevice = device;
       isConnected = true;
     });
-
     await espDevice!.connect();
     print("Conectado a ${device.advName}");
-
     List<BluetoothService> services = await espDevice!.discoverServices();
     for (var service in services) {
       if (service.uuid == serviceUUID) {
@@ -162,7 +159,6 @@ class _HomePageState extends State<HomePage> {
           if (characteristic.uuid == characteristicUUID) {
             espCharacteristic = characteristic;
             await espCharacteristic!.setNotifyValue(true);
-
             espCharacteristic!.lastValueStream.listen((value) {
               int emgValue = _convertToInt(value);
               setState(() => receivedData = emgValue);
@@ -173,7 +169,6 @@ class _HomePageState extends State<HomePage> {
       }
     }
   }
-
   void disconnectDevice() async {
     if (espDevice != null) {
       bool _really_disconect = await showDialog(
@@ -181,7 +176,7 @@ class _HomePageState extends State<HomePage> {
         builder: (BuildContext context) {
             return AlertDialog(
               title: Text("¿Desconectar?"),
-               content:
+              content:
                   Text('¿Estás seguro de que quieres desconectarte?'),
                   actions: [
                 TextButton(
@@ -223,12 +218,19 @@ class _HomePageState extends State<HomePage> {
       bottomNavigationBar: _buildBottomNavBar(),
     );
   }
-
-  Widget _buildHeader() {
+   Widget _buildHeader() {
     return Container(
       padding: const EdgeInsets.only(top: 50, bottom: 20, left: 20, right: 20),
       decoration: const BoxDecoration(
-        color: Color.fromARGB(255, 45, 62, 139),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color.fromRGBO(13, 71, 161, 1),
+            Colors.lightBlue,
+            Color.fromRGBO(102, 187, 106, 1),
+          ],
+        ),
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(35),
           bottomRight: Radius.circular(35),
@@ -245,14 +247,13 @@ class _HomePageState extends State<HomePage> {
           ),
           const SizedBox(height: 25),
           _buildTimeLimit(),
-          const SizedBox(height: 20), 
-          _buildNewsSection(), 
+          const SizedBox(height: 20),
+          _buildNewsSection(),
           const SizedBox(height: 25),
         ],
       ),
     );
   }
-
   Widget _buildProfileBar() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -264,6 +265,9 @@ class _HomePageState extends State<HomePage> {
         children: [
           const CircleAvatar(
             radius: 20,
+            //backgroundColor: Colors.transparent,
+            backgroundImage: AssetImage('lib/assets/robot.png'),
+
           ),
           const SizedBox(width: 12),
           Column(
@@ -271,8 +275,7 @@ class _HomePageState extends State<HomePage> {
             children: [
               Text("Robot 1",
                   style: TextStyle(
-                      fontFamily: 'Cocogoose',
-                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Lokeya',
                       fontSize: 16,
                       color: Colors.grey[800])),
               Row(
@@ -288,7 +291,7 @@ class _HomePageState extends State<HomePage> {
                   Text(
                     isConnected ? 'Conectado' : 'Desconectado',
                     style: TextStyle(
-                        fontFamily: 'Cocogoose',
+                        fontFamily: 'Lokeya',
                         fontSize: 12,
                         color: Colors.grey[600]),
                   ),
@@ -312,7 +315,6 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
   Widget _buildConnectionPanel() {
     return Container(
       margin: const EdgeInsets.only(top: 15),
@@ -365,25 +367,22 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
   Widget _buildTimeLimit() {
     return const Column(
       children: [
         Text('Bienvenido',
             style: TextStyle(
-                fontFamily: 'Cocogoose',
-                fontSize: 26,
+                fontFamily: 'AGRESSIVE',
+                fontSize: 30,
                 fontWeight: FontWeight.bold,
                 color: Colors.white)),
         SizedBox(height: 4),
         Text("Educa y protege a tus menores",
             style: TextStyle(
-                fontFamily: 'Cocogoose', fontSize: 14, color: Colors.white70)),
+                fontFamily: 'Lokeya', fontSize: 14, color: Colors.white70)),
       ],
     );
   }
-  
-  // <-- WIDGET NUEVO AÑADIDO -->
   Widget _buildNewsSection() {
     return GestureDetector(
       onTap: () {
@@ -417,18 +416,17 @@ class _HomePageState extends State<HomePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Noticias del Día',
+                      'Noticias del Dia',
                       style: TextStyle(
-                        fontFamily: 'Cocogoose',
+                        fontFamily: 'Lokeya',
                         fontSize: 16,
-                        fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
                     ),
                     Text(
                       'Resumen de ciberseguridad',
                       style: TextStyle(
-                        fontFamily: 'Cocogoose',
+                        fontFamily: 'Lokeya',
                         fontSize: 12,
                         color: Colors.white70,
                       ),
@@ -443,8 +441,6 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
-
   Widget _buildFeaturesGrid() {
     return Padding(
       padding: const EdgeInsets.all(20),
@@ -464,7 +460,6 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
   Widget _buildBottomNavBar() {
     return Container(
       height: 80,
@@ -489,7 +484,6 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
   Widget _buildNavItem(IconData icon, String label, int index) {
     final isSelected = _selectedIndex == index;
     return GestureDetector(
@@ -540,7 +534,7 @@ class FeatureCard extends StatelessWidget {
               color: feature.iconBgColor,
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(feature.icon, color: const Color(0xFFC76A6F), size: 20),
+            child: Icon(feature.icon, color: feature.iconColor, size: 20),
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -558,17 +552,17 @@ class FeatureCard extends StatelessWidget {
               Text(
                 feature.subtitle,
                 style: const TextStyle(
-                  fontFamily: 'Cocogoose',
+                  fontFamily: 'Lokeya',
                   fontSize: 12,
-                  color: Colors.pinkAccent,
+                  color: Colors.blue,
                 ),
               ),
               Text(
                 feature.bottomText,
                 style: const TextStyle(
-                  fontFamily: 'Cocogoose',
+                  fontFamily: 'Lokeya',
                   fontSize: 12,
-                  color: Colors.pinkAccent,
+                  color: Colors.blue,
                 ),
               ),
             ],

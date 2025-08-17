@@ -11,11 +11,9 @@ class WelcomeScreen extends StatelessWidget {
     const mainGradient = LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [
-        
-        Color.fromARGB(255, 7, 67, 115),
-        Colors.lightBlueAccent,
-        Color.fromARGB(255, 97, 218, 234),
+      colors: [ Color.fromRGBO(13, 71, 161, 1),
+        Colors.lightBlue,
+        Color.fromRGBO(102, 187, 106, 1),
 
         
       ],
@@ -44,13 +42,13 @@ class WelcomeScreen extends StatelessWidget {
                   .slideY(begin: -0.2, curve: Curves.easeOut),*/
               const SizedBox(height: 30),
               const Text(
-                'Nombre App',
+                'My App',
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
                   letterSpacing: 1,
                   color: Colors.white,
-                  fontFamily: 'Cocogoose',
+                  fontFamily: 'AGRESSIVE',
                 ),
               )
                   .animate()
@@ -62,12 +60,12 @@ class WelcomeScreen extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 40),
                 child: Text(
-                  'poner nuestro slogan',
+                  'SLOGAN',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.white.withOpacity(0.8),
-                    fontFamily: 'Cocogoose',
+                    fontFamily: 'Lokeya',
                     fontStyle: FontStyle.italic,
                   ),
                 ),
@@ -87,7 +85,7 @@ class WelcomeScreen extends StatelessWidget {
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
-                  foregroundColor: const Color(0xFFE3005D),
+                  foregroundColor: Colors.green,
                   padding:
                       const EdgeInsets.symmetric(horizontal: 80, vertical: 15),
                   shape: RoundedRectangleBorder(

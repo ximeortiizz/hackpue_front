@@ -28,10 +28,10 @@ class NewsScreen extends StatefulWidget {
 
 class _NewsScreenState extends State<NewsScreen> {
   final List<Color> cardColors = [
-    const Color.fromRGBO(254, 243, 199, 1),
-    const Color.fromRGBO(224, 231, 255, 1),
-    const Color.fromRGBO(254, 226, 226, 1),
-    const Color.fromRGBO(209, 250, 229, 1),
+    const Color(0xFFD1FAE5),
+    const  Color(0xFFEBF2FA) ,
+    const Color(0xFFD1FAE5), 
+    const Color(0xFFE0E7FF), 
   ];
 
   late final List<NewsArticle> articles;
@@ -41,31 +41,25 @@ class _NewsScreenState extends State<NewsScreen> {
     super.initState();
     articles = [
       NewsArticle(
-        title:
-            'Vulnerabilidad crítica en OpenSSL afecta a servidores de todo el mundo',
-        summary:
-            'Una nueva falla de seguridad en la popular librería de criptografía OpenSSL podría permitir a los atacantes ejecutar código de forma remota...',
+        title: 'Vulnerabilidad crítica en OpenSSL afecta a servidores de todo el mundo',
+        summary: 'Una nueva falla de seguridad en la popular librería de criptografía OpenSSL podría permitir a los atacantes ejecutar código de forma remota...',
         link: 'https://www.incibe.es/protege-tu-empresa/avisos-seguridad',
         date: '15 de Agosto, 2025',
-        color: cardColors[0],
+        color: cardColors[0], 
       ),
       NewsArticle(
         title: 'Aumento de ataques de Phishing dirigidos a usuarios en la nube',
-        summary:
-            'Los ciberdelincuentes están utilizando tácticas cada vez más sofisticadas para robar credenciales de acceso a plataformas como Microsoft 365...',
-        link:
-            'https://www.xataka.com/seguridad/microsoft-365-se-ha-convertido-objetivo-numero-uno-phishing-laboral-este-motivo',
+        summary: 'Los ciberdelincuentes están utilizando tácticas cada vez más sofisticadas para robar credenciales de acceso a plataformas como Microsoft 365...',
+        link: 'https://www.xataka.com/seguridad/microsoft-365-se-ha-convertido-objetivo-numero-uno-phishing-laboral-este-motivo',
         date: '14 de Agosto, 2025',
-        color: cardColors[1],
+        color: cardColors[1], 
       ),
       NewsArticle(
         title: '¿Es seguro el "smishing"? Cómo protegerte de estafas por SMS',
-        summary:
-            'El "smishing" o phishing por SMS está en auge. Los estafadores envían mensajes de texto falsos haciéndose pasar por bancos o empresas...',
-        link:
-            'https://www.osi.es/es/actualidad/blog/2023/04/21/que-es-el-smishing-y-como-puedes-protegerte',
+        summary: 'El "smishing" o phishing por SMS está en auge. Los estafadores envían mensajes de texto falsos haciéndose pasar por bancos o empresas...',
+        link: 'https://www.osi.es/es/actualidad/blog/2023/04/21/que-es-el-smishing-y-como-puedes-protegerte',
         date: '13 de Agosto, 2025',
-        color: cardColors[2],
+        color: cardColors[2], 
       ),
     ];
 
@@ -89,46 +83,64 @@ class _NewsScreenState extends State<NewsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white70,
+      extendBodyBehindAppBar: true, 
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black),
+          icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white),
           onPressed: () => Navigator.of(context).pop(),
         ),
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: const Text(
-          'Noticias importantes',
-          style: TextStyle(fontSize: 20, color: Colors.black),
-        ),
+        title: const Text('Noticias importantes', style: TextStyle(fontSize:20, color: Colors.white, fontWeight: FontWeight.bold),),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.apps_rounded, color: Colors.black),
-            onPressed: () {},
-          ),
+          IconButton(icon: const Icon(Icons.apps_rounded, color: Colors.white), onPressed: () {},),
         ],
       ),
-      body: Column(
-        children: [
-          const SizedBox(height: 20),
-          Expanded(
-            child: PageView.builder(
-              controller: _pageController,
-              itemCount: articles.length,
-              itemBuilder: (context, index) {
-                double scale = (1 - (_currentPage - index).abs() * 0.1).clamp(
-                  0.88,
-                  1.0,
-                );
-                return Transform.scale(
-                  scale: scale,
-                  child: NewsCard(article: articles[index]),
-                );
-              },
-            ),
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color.fromRGBO(13, 71, 161, 1),
+              Colors.lightBlue,
+              Color.fromRGBO(102, 187, 106, 1),
+            ],
           ),
-          const SizedBox(height: 20),
-        ],
+        ),
+        child: SafeArea( 
+          child: Column(
+            children: [
+              const SizedBox(height: 20),
+              Expanded(
+                child: PageView.builder(
+                  controller: _pageController,
+                  itemCount: articles.length,
+                  itemBuilder: (context, index) {
+                    double diff = index - _currentPage;
+                    final double scale = (1 - diff.abs() * 0.1).clamp(0.88, 1.0);
+                    final double yOffset = diff.abs() * 30.0;
+                    final double rotation = diff * -0.1;
+
+                    return Transform.translate(
+                      offset: Offset(0, yOffset),
+                      child: Transform.rotate(
+                        angle: rotation,
+                        child: Transform.scale(
+                          scale: scale,
+                          child: NewsCard(article: articles[index]),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: 20),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -166,21 +178,6 @@ class NewsCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-            decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.08),
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: const Text(
-              'CIBERSEGURIDAD',
-              style: TextStyle(
-                color: Colors.black54,
-                fontWeight: FontWeight.bold,
-                fontSize: 11,
-              ),
-            ),
-          ),
           const SizedBox(height: 16),
           Text(
             article.title,
@@ -193,8 +190,7 @@ class NewsCard extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 8),
-
+          const SizedBox(height: 15),
           GestureDetector(
             onTap: () => _launchURL(article.link),
             child: Text(
@@ -207,7 +203,6 @@ class NewsCard extends StatelessWidget {
               ),
             ),
           ),
-
           const SizedBox(height: 8),
           Text(
             article.date,
@@ -227,18 +222,16 @@ class NewsCard extends StatelessWidget {
               height: 1.5,
             ),
           ),
-
           const Spacer(),
-
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               CircleAvatar(
                 radius: 20,
-                backgroundColor: const Color(0xFFF9D4D5),
+                backgroundColor: Colors.blue.withOpacity(0.3),
                 child: Icon(
                   Icons.priority_high_rounded,
-                  color: Colors.red.shade800,
+                  color: Colors.blue,
                   size: 22,
                 ),
               ),
@@ -290,7 +283,7 @@ class NewsCard extends StatelessWidget {
                         ),
                       ),
                       child: Text(
-                        "Ver Guía",
+                        "Ver Aquí",
                         style: TextStyle(
                           color: Colors.black.withOpacity(0.8),
                           fontWeight: FontWeight.bold,

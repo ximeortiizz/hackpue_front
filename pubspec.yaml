@@ -25,5 +25,14 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
+    - lib/assets/robot.png
+  fonts:
+    - family: AGRESSIVE
+      fonts:
+        - asset: lib/assets/fonts/AGRESSIVE.otf
+    - family: Lokeya
+      fonts:
+        - asset: lib/assets/fonts/Lokeya.ttf
+          
     
     
