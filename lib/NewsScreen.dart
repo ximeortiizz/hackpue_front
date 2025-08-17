@@ -8,14 +8,16 @@ class NewsArticle {
   final String link;
   final String summary;
   final String date;
-  final Color color;
+  final String explicacion;
+  final String actividadSugerida;
 
   NewsArticle({
     required this.title,
     required this.link,
     required this.summary,
     required this.date,
-    required this.color,
+    required this.explicacion,
+    required this.actividadSugerida,
   });
 }
 
@@ -27,12 +29,6 @@ class NewsScreen extends StatefulWidget {
 }
 
 class _NewsScreenState extends State<NewsScreen> {
-  final List<Color> cardColors = [
-    const Color(0xFFD1FAE5),
-    const  Color(0xFFEBF2FA) ,
-    const Color(0xFFD1FAE5), 
-    const Color(0xFFE0E7FF), 
-  ];
 
   late final List<NewsArticle> articles;
 
@@ -45,21 +41,24 @@ class _NewsScreenState extends State<NewsScreen> {
         summary: 'Una nueva falla de seguridad en la popular librería de criptografía OpenSSL podría permitir a los atacantes ejecutar código de forma remota...',
         link: 'https://www.incibe.es/protege-tu-empresa/avisos-seguridad',
         date: '15 de Agosto, 2025',
-        color: cardColors[0], 
+        explicacion: "Una vulnerabilidad es como una puerta sin cerradura en un programa. Si un 'malo' la encuentra, puede entrar sin permiso. Por eso es muy importante 'poner la cerradura' actualizando los programas.",
+        actividadSugerida: "Juego de las Actualizaciones: Dibuja un castillo con varias puertas. Explica que cada actualización es un guardián nuevo que protege una puerta. Cada vez que 'actualicen' (pongan un guardián), el castillo estará más seguro.",
       ),
       NewsArticle(
         title: 'Aumento de ataques de Phishing dirigidos a usuarios en la nube',
-        summary: 'Los ciberdelincuentes están utilizando tácticas cada vez más sofisticadas para robar credenciales de acceso a plataformas como Microsoft 365...',
+        summary: 'Los ciberdelincuentes están utilizando tácticas cada vez más sofisticadas para robar credenciales de acceso a plataformas como Microsoft 350...',
         link: 'https://www.xataka.com/seguridad/microsoft-365-se-ha-convertido-objetivo-numero-uno-phishing-laboral-este-motivo',
         date: '14 de Agosto, 2025',
-        color: cardColors[1], 
+        explicacion: "El phishing es como un lobo disfrazado de oveja. Son correos o mensajes que parecen de alguien que conoces (como un amigo o un juego), pero en realidad es un 'malo' que quiere robar tus contraseñas.",
+        actividadSugerida: "Juego de Roles: 'El Pescador de Secretos'. Crea tarjetas con mensajes: unos seguros y otros sospechosos (p. ej., '¡Ganaste un premio! Haz clic aquí'). Pídele a tu hijo que 'pesque' solo los mensajes seguros.",
       ),
       NewsArticle(
         title: '¿Es seguro el "smishing"? Cómo protegerte de estafas por SMS',
         summary: 'El "smishing" o phishing por SMS está en auge. Los estafadores envían mensajes de texto falsos haciéndose pasar por bancos o empresas...',
         link: 'https://www.osi.es/es/actualidad/blog/2023/04/21/que-es-el-smishing-y-como-puedes-protegerte',
         date: '13 de Agosto, 2025',
-        color: cardColors[2], 
+        explicacion: "El smishing es muy parecido al phishing, pero ocurre en los mensajes de texto del teléfono. A veces envían enlaces peligrosos que no debemos abrir, incluso si parecen importantes.",
+        actividadSugerida: "La Regla de los 3 Pasos: 1. ¿Conozco a quien me envía esto? 2. ¿Me pide que haga algo rápido o me ofrece algo demasiado bueno? 3. Si dudo, pregunto a un adulto antes de tocar nada. Practica con mensajes de ejemplo.",
       ),
     ];
 
@@ -83,7 +82,7 @@ class _NewsScreenState extends State<NewsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: true, 
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white),
@@ -110,7 +109,7 @@ class _NewsScreenState extends State<NewsScreen> {
             ],
           ),
         ),
-        child: SafeArea( 
+        child: SafeArea(
           child: Column(
             children: [
               const SizedBox(height: 20),
@@ -164,7 +163,7 @@ class NewsCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
       padding: const EdgeInsets.all(24.0),
       decoration: BoxDecoration(
-        color: article.color,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(30.0),
         boxShadow: [
           BoxShadow(
@@ -240,20 +239,8 @@ class NewsCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      "Guía para hablar",
-                      style: TextStyle(
-                        color: Colors.grey.shade700,
-                        fontSize: 12,
-                      ),
-                    ),
-                    Text(
-                      "del tema...",
-                      style: TextStyle(
-                        color: Colors.grey.shade700,
-                        fontSize: 12,
-                      ),
-                    ),
+                    Text("Guía para hablar", style: TextStyle(color: Colors.grey.shade700, fontSize: 12,),),
+                    Text("del tema...", style: TextStyle(color: Colors.grey.shade700, fontSize: 12,),),
                   ],
                 ),
               ),
@@ -262,7 +249,10 @@ class NewsCard extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const ActivityScreen(),
+                      builder: (context) => ActivityScreen(
+                        explicacion: article.explicacion,
+                        actividadSugerida: article.actividadSugerida,
+                      ),
                     ),
                   );
                 },
@@ -271,25 +261,13 @@ class NewsCard extends StatelessWidget {
                   child: BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 10,
-                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10,),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
+                        color: Colors.black.withOpacity(0.1), 
                         borderRadius: BorderRadius.circular(20.0),
-                        border: Border.all(
-                          color: Colors.white.withOpacity(0.3),
-                        ),
+                        border: Border.all(color: Colors.black.withOpacity(0.2),),
                       ),
-                      child: Text(
-                        "Ver Aquí",
-                        style: TextStyle(
-                          color: Colors.black.withOpacity(0.8),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                        ),
-                      ),
+                      child: Text("Ver Aquí", style: TextStyle(color: Colors.black.withOpacity(0.8), fontWeight: FontWeight.bold, fontSize: 14,),),
                     ),
                   ),
                 ),
